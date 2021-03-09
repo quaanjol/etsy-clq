@@ -166,7 +166,7 @@ class BigcomOriginalController extends Controller
         }
         // dd($excelArray);
         Excel::download(new BsManagementExports($excelArray), 'bs-management.csv');
-        return redirect('bigcomoriginal.bso.convert');
+        return redirect('/admin/bigcomoriginal/convert/bs/order');
 
         // return view('admin.web.bigcomoriginal.managementPreview')->with([
         //     'theme' => $theme,
@@ -262,6 +262,6 @@ class BigcomOriginalController extends Controller
         }
         // dd($excelArray);
         Excel::download(new BsOrderWongExport($excelArray), 'Wong-bedding_Kimberly.xlsx');
-        return redirect('bigcomoriginal.bsm.convert');
+        return redirect('/admin/bigcomoriginal/convert/bs/management');
     }
 }
