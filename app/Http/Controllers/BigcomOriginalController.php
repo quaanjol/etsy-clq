@@ -210,23 +210,29 @@ class BigcomOriginalController extends Controller
         $csv = array_map('str_getcsv', file($file));
         $bsOrders = [];
 
+        // dd($csv);
         foreach($csv as $index => $row) {
-            $bsOrderWong = new BsOrderWong();
-            $bsOrderWong->order_number = $row[2];
-            $bsOrderWong->full_name = $row[13];
-            $bsOrderWong->address1 = $row[14];
-            $bsOrderWong->address2 = $row[15];
-            $bsOrderWong->city = $row[16];
-            $bsOrderWong->post_code = $row[18];
-            $bsOrderWong->state_code = $row[17];
-            $bsOrderWong->country_code = $row[19];
-            $bsOrderWong->phone = $row[20];
-            $bsOrderWong->product_variation = $row[22];
-            $bsOrderWong->item_sku = $row[26];
-            $bsOrderWong->quantity = $row[27];
-            $bsOrderWong->base_cost = $row[28];
-            $bsOrderWong->total_price = $row[29];
-            $bsOrders[] = $bsOrderWong;
+            if($index == 0) {
+                continue;
+            } else {
+                $row = explode(";", $row[0]);
+                $bsOrderWong = new BsOrderWong();
+                $bsOrderWong->order_number = $row[2];
+                $bsOrderWong->full_name = $row[13];
+                $bsOrderWong->address1 = $row[14];
+                $bsOrderWong->address2 = $row[15];
+                $bsOrderWong->city = $row[16];
+                $bsOrderWong->post_code = $row[18];
+                $bsOrderWong->state_code = $row[17];
+                $bsOrderWong->country_code = $row[19];
+                $bsOrderWong->phone = $row[20];
+                $bsOrderWong->product_variation = $row[22];
+                $bsOrderWong->item_sku = $row[26];
+                $bsOrderWong->quantity = $row[27];
+                $bsOrderWong->base_cost = $row[28];
+                $bsOrderWong->total_price = $row[29];
+                $bsOrders[] = $bsOrderWong;
+            }
         }
 
         // dd($bsManagements);
