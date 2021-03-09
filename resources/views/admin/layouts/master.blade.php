@@ -67,7 +67,8 @@
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Thao tác:</h6>
                     <a class="collapse-item" href="{{ route('bigcomoriginal.bsm.convert') }}">BS Management</a>
-                    <a class="collapse-item" href="{{ route('bigcomoriginal.bso.convert') }}">BS Order</a>
+                    <a class="collapse-item" href="{{ route('bigcomoriginal.bso.convert') }}">BS Order Wong</a>
+                    <a class="collapse-item" href="{{ route('bigcomoriginal.cvds.convert') }}">CV Order Dreamship</a>
                 </div>
             </div>
         </li>

@@ -38,5 +38,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/admin/bigcomoriginal/convert/bs/management', 'App\Http\Controllers\BigcomOriginalController@convertManagement')->name('bigcomoriginal.bsm.convert.store');
     Route::get('/admin/bigcomoriginal/convert/bs/order', 'App\Http\Controllers\BigcomOriginalController@convertBso')->name('bigcomoriginal.bso.convert');
     Route::post('/admin/bigcomoriginal/convert/bs/order', 'App\Http\Controllers\BigcomOriginalController@convertBsoStore')->name('bigcomoriginal.bso.convert.store');
+
+    Route::get('/admin/bigcomoriginal/convert/cv/dreamship', 'App\Http\Controllers\BigcomOriginalController@convertCanvasDs')->name('bigcomoriginal.cvds.convert');
+    Route::post('/admin/bigcomoriginal/convert/cv/dreamship', 'App\Http\Controllers\BigcomOriginalController@convertCanvasDsStore')->name('bigcomoriginal.cvds.convert.store');
+    // Route::get('/admin/bigcomoriginal/convert/cv/order', 'App\Http\Controllers\BigcomOriginalController@convertBso')->name('bigcomoriginal.bso.convert');
+    // Route::post('/admin/bigcomoriginal/convert/cv/order', 'App\Http\Controllers\BigcomOriginalController@convertBsoStore')->name('bigcomoriginal.bso.convert.store');
     
 });

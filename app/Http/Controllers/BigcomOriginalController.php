@@ -269,4 +269,34 @@ class BigcomOriginalController extends Controller
         return Excel::download(new BsOrderWongExport($excelArray), 'Wong-bedding_Kimberly.xlsx');
         // return redirect('/admin/bigcomoriginal/convert/bs/management');
     }
+
+    // convert canvas file 
+    public function convertCanvasDs() {
+        $user = auth()->user();
+        if($user == null) {
+            return redirect('/login');
+        }
+        if($user->role == 'user') {
+            return redirect('/');
+        }
+        $theme = $user->theme;
+        $heading = ["vietnamese" => "Tạo file Canvas Order Dreamship", "english" => "Dashboard"];
+
+        return view('admin.web.bigcomoriginal.convertCvDs')->with([
+            'theme' => $theme,
+            'user' => $user,
+            'heading' => $heading,
+        ]);
+    }
+
+    public function convertCanvasDsStore() {
+        $user = auth()->user();
+        if($user == null) {
+            return redirect('/login');
+        }
+        if($user->role == 'user') {
+            return redirect('/');
+        }
+
+    }
 }
