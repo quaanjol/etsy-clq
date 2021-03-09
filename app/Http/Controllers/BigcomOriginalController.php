@@ -24,7 +24,6 @@ class BigcomOriginalController extends Controller
         }
         $theme = $user->theme;
         $heading = ["vietnamese" => "Tạo file management", "english" => "Dashboard"];
-        // dd(bcrypt('admin123'));
 
         return view('admin.web.bigcomoriginal.convertBsm')->with([
             'theme' => $theme,
