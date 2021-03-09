@@ -30,29 +30,37 @@ class BsManagementExports implements FromArray, WithHeadings
         return $this->excelArray;
     }
 
-    //Thêm hàng tiêu đề cho bảng
-    // public function headings() :array {
-    //     return ["Order Date/ PayPal Invoice Id", 
-    //             "Tracking Number", 
-    //             "Order Number", 
-    //             "Order Date", 
-    //             "Email(Billing)", 
-    //             "Shipping Method Title", 
-    //             "Quantity", 
-    //             "Item Name", 
-    //             "Full Name (Shipping)", 
-    //             "Address 1 (Shipping)", 
-    //             "Address 2 (Shipping)", 
-    //             "City (Shipping)", 
-    //             "State Code (Shipping)", 
-    //             "Zip Code (Shipping)", 
-    //             "Country Code (Shipping)", 
-    //             "Phone (Billing)", "Transaction ID", 
-    //             "Product Variation", 
-    //             "Image URL", 
-    //             "Item Sku", 
-    //             "Quantity", 
-    //             "Base Cost", 
-    //             "Quantity*Base Cost"];
-    // }
+    // Thêm hàng tiêu đề cho bảng
+    public function headings() :array {
+        return ["Order Date/ PayPal Invoice Id", 
+                "Tracking Number", 
+                "Order Number", 
+                "Order Date", 
+                "Customer Note", 
+                "Email(Billing)", 
+                "Order Status", 
+                "Paid Date", 
+                "Shipping Method Title", 
+                "Shipping Method", 
+                "Quantity", 
+                "Item Name", 
+                "Sku", 
+                "Full Name (Shipping)", 
+                "Address 1 (Shipping)", 
+                "Address 2 (Shipping)", 
+                "City (Shipping)", 
+                "State Code (Shipping)", 
+                "Zip Code (Shipping)", 
+                "Country Code (Shipping)", 
+                "Phone (Billing)", 
+                "Transaction ID", 
+                "Product Variation", 
+                "Image URL", 
+                "Order Refund Amount", 
+                "Customer Note", 
+                "Item Sku", 
+                "Quantity", 
+                "Base Cost", 
+                "Quantity*Base Cost"];
+    }
 }
