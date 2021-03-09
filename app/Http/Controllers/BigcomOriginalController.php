@@ -165,8 +165,8 @@ class BigcomOriginalController extends Controller
             array_push($excelArray, $tmp);
         }
         // dd($excelArray);
-        Excel::download(new BsManagementExports($excelArray), 'bs-management.csv');
-        return redirect('/admin/bigcomoriginal/convert/bs/order');
+        return Excel::download(new BsManagementExports($excelArray), 'bs-management.csv');
+        // return redirect('/admin/bigcomoriginal/convert/bs/order');
 
         // return view('admin.web.bigcomoriginal.managementPreview')->with([
         //     'theme' => $theme,
@@ -261,7 +261,7 @@ class BigcomOriginalController extends Controller
             array_push($excelArray, $tmp);
         }
         // dd($excelArray);
-        Excel::download(new BsOrderWongExport($excelArray), 'Wong-bedding_Kimberly.xlsx');
-        return redirect('/admin/bigcomoriginal/convert/bs/management');
+        return Excel::download(new BsOrderWongExport($excelArray), 'Wong-bedding_Kimberly.xlsx');
+        // return redirect('/admin/bigcomoriginal/convert/bs/management');
     }
 }
