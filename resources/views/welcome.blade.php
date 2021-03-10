@@ -63,7 +63,7 @@
 
             function writeSentence() {
                 if(start + 1 > sArr.length) {
-                        app.innerHTML = '';
+                    app.innerHTML = '';
                     start = -1;
                 } else {
                     app.innerHTML += sArr[start];
