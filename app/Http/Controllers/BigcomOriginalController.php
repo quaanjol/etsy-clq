@@ -45,7 +45,7 @@ class BigcomOriginalController extends Controller
         $heading = ["vietnamese" => "Tạo file order", "english" => "Dashboard"];
         $file = $request->file;
         $csv = array_map('str_getcsv', file($file));
-        dd($csv);
+        // dd($csv);
         $bsManagements = [];
         foreach($csv as $index => $row) {
             if($index == 0) {
@@ -226,7 +226,7 @@ class BigcomOriginalController extends Controller
             // $excelArray[] = $tmp;
             array_push($excelArray, $tmp);
         }
-        // dd($excelArray);
+        dd($excelArray);
         return Excel::download(new BsManagementExports($excelArray), 'bs-management.csv');
         // return redirect('/admin/bigcomoriginal/convert/bs/order');
 
