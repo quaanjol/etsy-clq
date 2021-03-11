@@ -45,7 +45,7 @@ class BigcomOriginalController extends Controller
         $heading = ["vietnamese" => "Tạo file order", "english" => "Dashboard"];
         $file = $request->file;
         $csv = array_map('str_getcsv', file($file));
-        // dd($csv);
+        dd($csv);
         $bsManagements = [];
         foreach($csv as $index => $row) {
             if($index == 0) {
