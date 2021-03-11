@@ -113,7 +113,7 @@ class BigcomOriginalController extends Controller
                 
                 $bsManagement->total_price = $bsManagement->base_cost*$bsManagement->quantity2;
                 $bsManagements[] = $bsManagement;
-            } else if(strpos(explode(": ", explode(", ", $row[31])[3])[1], 'Bedding Set') !== false) {
+            } else if(count($csv) >= 31 && strpos(explode(": ", explode(", ", $row[31])[3])[1], 'Bedding Set') !== false) {
                 $bsManagement = new BsManagement();
                 $bsManagement->order_date = "'" . date("ymd");
                 $bsManagement->tracking_number = '';
