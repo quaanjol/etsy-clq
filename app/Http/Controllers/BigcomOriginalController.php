@@ -50,104 +50,45 @@ class BigcomOriginalController extends Controller
         foreach($csv as $index => $row) {
             if($index == 0) {
                 continue;
-            } else if(strpos($row[3], ": ") !== false && strpos(explode(": ", $row[3])[1], 'Bedding Set') !== false) {
-                $bsManagement = new BsManagement();
-                $info = explode(";", $row[0]);
-                $bsManagement->order_date = "'" . date("ymd");
-                $bsManagement->tracking_number = '';
-                $bsManagement->order_number = strtoupper($info[0]) . "#" . $info[1];
-                $bsManagement->order_date2 = $info[3];
-                $bsManagement->customer_note = "";
-                $bsManagement->email_billing = $info[9];
-                $bsManagement->order_status = "";
-                $bsManagement->paid_date = "";
-                $bsManagement->shipping_method = $info[11];
-                $bsManagement->shipping_method2 = "";
-                $bsManagement->quantity = explode(": ", $row[1])[1];
-                $bsManagement->item_name = explode(": ", $row[3])[1];
-                $bsManagement->sku = "";
-                $bsManagement->full_name = $info[8];
-                $bsManagement->address1 = $info[21];
-                $bsManagement->address2 = $info[22];
-                $bsManagement->city = $info[23];
-                $bsManagement->state_code = $info[24];
-                $bsManagement->zip_code = $info[26];
-                $bsManagement->country_code = $info[27];
-                if(strpos($info[29], " ") !== false) {
-                    $bsManagement->phone = "'" . explode(" ", $info[29])[1];
-                } else {
-                    $bsManagement->phone = "'" . $info[29];
-                }
-                $bsManagement->transaction_id = explode(";", explode(": ", $row[6])[1])[1];
-                $bsManagement->product_variation = explode(': ', $row[4])[2];
-                $bsManagement->image_url = '';
-                $bsManagement->order_refund_amount = '';
-                $bsManagement->customer_note2 = "";
-                $bsManagement->item_sku = '';
-                $bsManagement->quantity2 = explode(": ", $row[1])[1];
-                if(trim($bsManagement->product_variation, " ") == 'AU Double') {
-                    $bsManagement->base_cost = 28;
-                } else if(trim($bsManagement->product_variation, " ") == 'EU Super King') {
-                    $bsManagement->base_cost = 35;
-                } else if(trim($bsManagement->product_variation, " ") == 'EU King') {
-                    $bsManagement->base_cost = 28;
-                } else if(trim($bsManagement->product_variation, " ") == 'EU Double') {
-                    $bsManagement->base_cost = 27;
-                } else if(trim($bsManagement->product_variation, " ") == 'EU Single') {
-                    $bsManagement->base_cost = 24;
-                } else if(trim($bsManagement->product_variation, " ") == 'AU Queen') {
-                    $bsManagement->base_cost = 30;
-                } else if(trim($bsManagement->product_variation, " ") == 'AU Single') {
-                    $bsManagement->base_cost = 26;
-                } else if(trim($bsManagement->product_variation, " ") == 'AU King') {
-                    $bsManagement->base_cost = 32;
-                } else if(trim($bsManagement->product_variation, " ") == 'US King') {
-                    $bsManagement->base_cost = 35;
-                } else if(trim($bsManagement->product_variation, " ") == 'US Twin') {
-                    $bsManagement->base_cost = 26;
-                } else if(trim($bsManagement->product_variation, " ") == 'US Full') {
-                    $bsManagement->base_cost = 30;
-                } else if(trim($bsManagement->product_variation, " ") == 'Us Queen') {
-                    $bsManagement->base_cost = 31;
-                }
-                
-                $bsManagement->total_price = $bsManagement->base_cost*$bsManagement->quantity2;
-                $bsManagements[] = $bsManagement;
-            } else if(count($csv) >= 31 && strpos(explode(": ", explode(", ", $row[31])[3])[1], 'Bedding Set') !== false) {
+            }
+
+            $prdName = explode(": ", $row[35])[1];
+            if(strpos($prdName, "Bedding Set") !== false) {
+                // dd($prdName);
                 $bsManagement = new BsManagement();
                 $bsManagement->order_date = "'" . date("ymd");
                 $bsManagement->tracking_number = '';
                 $bsManagement->order_number = strtoupper($row[0]) . "#" . $row[1];
                 $bsManagement->order_date2 = $row[3];
                 $bsManagement->customer_note = "";
-                $bsManagement->email_billing = $row[9];
+                $bsManagement->email_billing = $row[10];
                 $bsManagement->order_status = "";
                 $bsManagement->paid_date = "";
-                $bsManagement->shipping_method = $row[11];
+                $bsManagement->shipping_method = $row[12];
                 $bsManagement->shipping_method2 = "";
-                $bsManagement->quantity = explode(": ", explode(", ", $row[31])[1])[1];
-                $bsManagement->item_name = explode(": ", explode(", ", $row[31])[3])[1];
+                $bsManagement->quantity = explode(": ", $row[33])[1];
+                $bsManagement->item_name = $prdName;
                 $bsManagement->sku = "";
-                $bsManagement->full_name = $row[8];
-                $bsManagement->address1 = $row[21];
-                $bsManagement->address2 = $row[22];
-                $bsManagement->city = $row[23];
-                $bsManagement->state_code = $row[24];
-                $bsManagement->zip_code = $row[26];
-                $bsManagement->country_code = $row[27];
-                if(strpos($row[29], " ") !== false) {
-                    $bsManagement->phone = "'" . explode(" ", $row[29])[1];
+                $bsManagement->full_name = $row[9];
+                $bsManagement->address1 = $row[22];
+                $bsManagement->address2 = $row[23];
+                $bsManagement->city = $row[24];
+                $bsManagement->state_code = $row[25];
+                $bsManagement->zip_code = $row[27];
+                $bsManagement->country_code = $row[28];
+                if(strpos($row[30], "+") !== false) {
+                    $bsManagement->phone = "'" . str_replace("+", "", $row[30]);
                 } else {
-                    $bsManagement->phone = "'" . $row[29];
+                    $bsManagement->phone = "'" . $row[30];
                 }
-                $bsManagement->transaction_id = $row[32];
-                $bsManagement->product_variation = explode(": ", explode(", ", $row[31])[4])[2];
+                $bsManagement->transaction_id = $row[39];
+                $bsManagement->product_variation = explode(": ", $row[36])[2];
                 $bsManagement->image_url = '';
                 $bsManagement->order_refund_amount = '';
                 $bsManagement->customer_note2 = "";
                 $bsManagement->item_sku = '';
-                $bsManagement->quantity2 = explode(": ", explode(", ", $row[31])[1])[1];
-                if(trim($bsManagement->product_variation, " ") == 'AU Double') {
+                $bsManagement->quantity2 = explode(": ", $row[33])[1];
+                if($bsManagement->product_variation == 'AU Double') {
                     $bsManagement->base_cost = 28;
                 } else if(trim($bsManagement->product_variation, " ") == 'EU Super King') {
                     $bsManagement->base_cost = 35;
@@ -174,7 +115,6 @@ class BigcomOriginalController extends Controller
                 }
                 
                 $bsManagement->total_price = (float)$bsManagement->base_cost*(float)$bsManagement->quantity2;
-                // dd($bsManagement);
                 $bsManagements[] = $bsManagement;
             }
         }
@@ -216,26 +156,16 @@ class BigcomOriginalController extends Controller
 
         }
         
-        // dd($bsManagements[0]);
         $excelArray = [];
         foreach($collection as $bsManagement) {
             $tmp = [];
             foreach($bsManagement as $key => $value) {
                 $tmp[$key] = $value;
             }
-            // $excelArray[] = $tmp;
             array_push($excelArray, $tmp);
         }
-        dd($excelArray);
+        // dd($excelArray);
         return Excel::download(new BsManagementExports($excelArray), 'bs-management.csv');
-        // return redirect('/admin/bigcomoriginal/convert/bs/order');
-
-        // return view('admin.web.bigcomoriginal.managementPreview')->with([
-        //     'theme' => $theme,
-        //     'user' => $user,
-        //     'heading' => $heading,
-        //     'bsManagements' => $collection
-        // ]);
     }
 
     // file order handle
@@ -276,47 +206,32 @@ class BigcomOriginalController extends Controller
         foreach($csv as $index => $row) {
             if($index == 0) {
                 continue;
-            } else if(strpos($row[0], ";") !== false) {
-                $row = explode(";", $row[0]);
-                $bsOrderWong = new BsOrderWong();
-                $bsOrderWong->order_number = $row[2];
-                $bsOrderWong->full_name = $row[13];
-                $bsOrderWong->address1 = $row[14];
-                $bsOrderWong->address2 = $row[15];
-                $bsOrderWong->city = $row[16];
-                $bsOrderWong->post_code = $row[18];
-                $bsOrderWong->state_code = $row[17];
-                $bsOrderWong->country_code = $row[19];
-                $bsOrderWong->phone = $row[20];
-                $bsOrderWong->product_variation = $row[22];
-                $bsOrderWong->item_sku = $row[26];
-                $bsOrderWong->quantity = $row[27];
-                $bsOrderWong->base_cost = $row[28];
-                $bsOrderWong->total_price = $row[29];
-                $bsOrders[] = $bsOrderWong;
             } else {
-                // dd($row);
+                $roww = $row;
                 $bsOrderWong = new BsOrderWong();
-                $bsOrderWong->order_number = $row[2];
-                $bsOrderWong->full_name = $row[13];
-                $bsOrderWong->address1 = $row[14];
-                $bsOrderWong->address2 = $row[15];
-                $bsOrderWong->city = $row[16];
-                $bsOrderWong->post_code = $row[18];
-                $bsOrderWong->state_code = $row[17];
-                $bsOrderWong->country_code = $row[19];
-                $bsOrderWong->phone = $row[20];
-                $bsOrderWong->product_variation = $row[22];
-                $bsOrderWong->item_sku = $row[26];
-                $bsOrderWong->quantity = $row[27];
-                $bsOrderWong->base_cost = $row[28];
-                $bsOrderWong->total_price = $row[29];
+                $bsOrderWong->order_number = $roww[2];
+                $bsOrderWong->full_name = $roww[13];
+                $bsOrderWong->address1 = $roww[14];
+                $bsOrderWong->address2 = $roww[15];
+                $bsOrderWong->city = $roww[16];
+                $bsOrderWong->post_code = $roww[18];
+                $bsOrderWong->state_code = $roww[17];
+                $bsOrderWong->country_code = $roww[19];
+                $bsOrderWong->phone = $roww[20];
+                $bsOrderWong->product_variation = $roww[22];
+                $bsOrderWong->item_sku = $roww[26];
+                $bsOrderWong->quantity = $roww[27];
+                $bsOrderWong->base_cost = $roww[28];
+                if(strpos($row[29], ";") !== false) {
+                    $bsOrderWong->total_price = explode(";", $roww[29])[0];
+                } else {
+                    $bsOrderWong->total_price = $row[29];
+                }
                 $bsOrders[] = $bsOrderWong;
                 // dd($bsOrderWong);
-            }
+            } 
         }
 
-        // dd($bsManagements);
         $collection = new Collection();
         foreach($bsOrders as $bsOrder){
             $collection->push((object)['order_number' => $bsOrder->order_number,
@@ -344,12 +259,10 @@ class BigcomOriginalController extends Controller
             foreach($bsOrder as $key => $value) {
                 $tmp[$key] = $value;
             }
-            // $excelArray[] = $tmp;
             array_push($excelArray, $tmp);
         }
         // dd($excelArray);
         return Excel::download(new BsOrderWongExport($excelArray), 'Wong-bedding_Kimberly.xlsx');
-        // return redirect('/admin/bigcomoriginal/convert/bs/management');
     }
 
     // convert canvas file 
