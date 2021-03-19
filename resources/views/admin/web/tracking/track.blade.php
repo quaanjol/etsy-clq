@@ -1,0 +1,38 @@
+@extends('admin.layouts.master')
+
+@section('title')
+Dreamship Tracking
+@endsection
+
+@section('content')
+<div class="container">
+    <!-- Basic Card Example -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">From {{ config('app.name') }} with <i class="fas fa-heart text-danger"></i></h6>
+        </div>
+        <div class="card-body">
+            <div class="d-flex justify-content-center">
+                <form action="{{ route('tracking.dreamship.get') }}" method="get">
+                    @csrf
+                    <div class="form-group">
+                        <label for="file">Order number</label>
+                        <input type="text" class="form-control" name="order_number" id="order_number" required>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-success" type="submit" id="submiBtn">
+                            Get information
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+      </div>
+</div>
+@endsection
+
+@section('scripts')
+<script>
+    document.getElementById('trackingLi').classList.add('active');
+</script>
+@endsection
