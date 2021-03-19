@@ -58,7 +58,7 @@ class CvdsExport implements FromArray, WithHeadings
                 "Print Area 5",
                 "Artwork URL 5",
                 "Resize 5",
-                "Position 15",
+                "Position 5",
                 "Test Order"];
     }
 }
