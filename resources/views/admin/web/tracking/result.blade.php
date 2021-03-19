@@ -12,6 +12,9 @@ Dreamship Tracking Result
             <h6 class="m-0 font-weight-bold text-primary">From {{ config('app.name') }} with <i class="fas fa-heart text-danger"></i></h6>
         </div>
         <div class="card-body">
+            <small class="text-danger">
+                Tổng số order tìm được: <span id="count"></span>
+            </small>
             <div id="list"></div>
         </div>
       </div>
@@ -24,8 +27,20 @@ Dreamship Tracking Result
 
     var result = JSON.parse('{!! ($result) !!}');
     var data = result.data;
+    console.log(data);
+    document.getElementById('count').textContent = data.length;
 
     Array.from(data).forEach(item => {
+        var datee = item.created_at.split("T")[0];
+        if(item.fulfillments[0].trackings.length == 0) {
+            var carrier = "Unknown";
+            var tracking = "Unknown";
+            var status = "Not available yet";
+        } else {
+            var carrier = item.fulfillments[0].trackings[0].carrier;
+            var tracking = item.fulfillments[0].trackings[0].tracking_number;
+            var status = item.fulfillments[0].trackings[0].status;
+        }
         document.getElementById('list').innerHTML += `
             <ul class="list-group mb-3">
                 <li class="list-group-item">
@@ -35,13 +50,16 @@ Dreamship Tracking Result
                     <b>Total cost:</b> $${item.total_cost}
                 </li>
                 <li class="list-group-item">
-                    <b>Carrier:</b> ${item.fulfillments[0].trackings[0].carrier}
+                    <b>Created at:</b> ${datee}
                 </li>
                 <li class="list-group-item">
-                    <b>Tracking:</b> ${item.fulfillments[0].trackings[0].tracking_number}
+                    <b>Carrier:</b> ${carrier}
                 </li>
                 <li class="list-group-item">
-                    <b>Status:</b> <span class="text-capitalize">${item.fulfillments[0].trackings[0].status}</span>
+                    <b>Tracking:</b> ${tracking}
+                </li>
+                <li class="list-group-item">
+                    <b>Status:</b> <span class="text-capitalize">${status}</span>
                 </li>
             </ul>
         `;

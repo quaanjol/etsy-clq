@@ -21,7 +21,7 @@ Dreamship Tracking
                     </div>
                     <div class="form-group">
                         <button class="btn btn-success" type="submit" id="submiBtn">
-                            Get information
+                            Track
                         </button>
                     </div>
                 </form>

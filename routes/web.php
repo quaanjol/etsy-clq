@@ -46,7 +46,10 @@ Route::group(['middleware' => 'auth'], function () {
 
     // tracking
     Route::get('/admin/tracking/dreamship', 'App\Http\Controllers\TrackingController@trackingDs')->name('tracking.dreamship');
+    Route::get('/admin/tracking/dreamship/afterdate', 'App\Http\Controllers\TrackingController@trackingDsAfterDate')->name('tracking.dreamship.afterdate');
+    Route::get('/admin/tracking/dreamship/beforedate', 'App\Http\Controllers\TrackingController@trackingDsBeforeDate')->name('tracking.dreamship.beforedate');
+    Route::get('/admin/tracking/dreamship/betweendate', 'App\Http\Controllers\TrackingController@trackingDsBetweenDate')->name('tracking.dreamship.betweendate');
     Route::get('/admin/tracking/dreamship/result', 'App\Http\Controllers\TrackingController@trackingDsGet')->name('tracking.dreamship.get');
-    //Route::get('/admin/tracking/dreamship/result', 'App\Http\Controllers\TrackingController@trackingDsResult')->name('tracking.dreamship');
+    
     
 });
