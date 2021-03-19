@@ -75,6 +75,8 @@ Dreamship Tracking Result
             redirect = 'https://auspost.com.au/mypost/track/#/search';
         } else if(carrier == 'GSO') {
             redirect = 'https://www.gls-us.com/tracking';
+        } else if(carrier == 'USPS') {
+            redirect = 'https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=' + tracking;
         }
         
         document.getElementById('list').innerHTML += `
