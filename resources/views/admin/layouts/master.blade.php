@@ -96,7 +96,7 @@
             <div id="collapseTracking" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Thao tác:</h6>
-                    <a class="collapse-item" href="{{ route('tracking.dreamship') }}">Dreamship</a>
+                    <a class="collapse-item" href="{{ route('tracking.dreamship') }}">Dreamship (by order number)</a>
                 </div>
             </div>
         </li>
