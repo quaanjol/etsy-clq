@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\BsManagementExports;
 use App\Exports\BsOrderWongExport;
-use App\Exports\CvDsExport;
+use App\Exports\CvdsExport;
 
 class BigcomOriginalController extends Controller
 {
@@ -514,6 +514,6 @@ class BigcomOriginalController extends Controller
             array_push($excelArray, $tmp);
         }
         // dd($excelArray);
-        return Excel::download(new CvDsExport($excelArray), 'canvas-management.csv');
+        return Excel::download(new CvdsExport($excelArray), 'canvas-management.csv');
     }
 }
