@@ -514,6 +514,6 @@ class BigcomOriginalController extends Controller
             array_push($excelArray, $tmp);
         }
         // dd($excelArray);
-        return Excel::download(new CvDsExport($excelArray), 'canvas-management.csv'); 
+        return Excel::download(new CvDsExport($excelArray), 'canvas-management.csv');
     }
 }
