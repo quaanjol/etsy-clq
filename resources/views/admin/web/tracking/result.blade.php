@@ -4,6 +4,22 @@
 Dreamship Tracking Result
 @endsection
 
+@section('style')
+<style>
+    .custom-ul {
+        list-style-type: square;;
+    }
+
+    .custom-ul li {
+        margin-left: -18px;
+    }
+
+    .col-md-4 .card:hover {
+        background-color: rgba(0,0,0,0.1) !important;
+    }
+</style>
+@endsection
+
 @section('content')
 <div class="container">
     <!-- Basic Card Example -->
@@ -12,10 +28,12 @@ Dreamship Tracking Result
             <h6 class="m-0 font-weight-bold text-primary">From {{ config('app.name') }} with <i class="fas fa-heart text-danger"></i></h6>
         </div>
         <div class="card-body">
-            <small class="text-danger">
-                Tổng số order tìm được: <span id="count"></span>
-            </small>
-            <div id="list"></div>
+            <div class="mb-3">
+                <small class="text-danger">
+                    Tổng số order tìm được: <span id="count"></span>
+                </small>
+            </div>
+            <div id="list" class="row"></div>
         </div>
       </div>
 </div>
@@ -41,27 +59,52 @@ Dreamship Tracking Result
             var tracking = item.fulfillments[0].trackings[0].tracking_number;
             var status = item.fulfillments[0].trackings[0].status;
         }
+
+        var redirect = '#';
+        if(carrier == 'RoyalMail') {
+            redirect = 'https://www3.royalmail.com/track-your-item#/tracking-results/' + tracking;
+        } else if(carrier == 'DHLExpress') {
+            redirect = 'https://www.dhl.com/us-en/home/tracking/tracking-ecommerce.html?submit=1&tracking-id=' + tracking;
+        } else if(carrier == 'FedEx') {
+            redirect = 'https://www.fedex.com/apps/fedextrack/?action=track&action=track&tracknumbers=' + tracking;
+        } else if(carrier == 'UPS') {
+            redirect = 'https://www.ups.com/WebTracking?loc=en_US&requester=ST&trackNums=' + tracking + '/trackdetails';
+        } else if(carrier == 'Fastway') {
+            redirect = 'https://www.aramex.com.au/tools/track/';
+        } else if(carrier == 'AustraliaPost') {
+            redirect = 'https://auspost.com.au/mypost/track/#/search';
+        } else if(carrier == 'GSO') {
+            redirect = 'https://www.gls-us.com/tracking';
+        }
+        
         document.getElementById('list').innerHTML += `
-            <ul class="list-group mb-3">
-                <li class="list-group-item">
-                    <b>Order:</b> ${item.reference_id}
-                </li>
-                <li class="list-group-item">
-                    <b>Total cost:</b> $${item.total_cost}
-                </li>
-                <li class="list-group-item">
-                    <b>Created at:</b> ${datee}
-                </li>
-                <li class="list-group-item">
-                    <b>Carrier:</b> ${carrier}
-                </li>
-                <li class="list-group-item">
-                    <b>Tracking:</b> ${tracking}
-                </li>
-                <li class="list-group-item">
-                    <b>Status:</b> <span class="text-capitalize">${status}</span>
-                </li>
-            </ul>
+            <div class="col-md-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">${item.reference_id}</h5>
+                        <p class="card-text">
+                            <ul class="custom-ul">
+                                <li>
+                                    <b>Total cost:</b> $${item.total_cost}
+                                </li>
+                                <li>
+                                    <b>Created at:</b> ${datee}
+                                </li>
+                                <li>
+                                    <b>Carrier:</b> ${carrier}
+                                </li>
+                                <li>
+                                    <b>Tracking:</b> ${tracking}
+                                </li>
+                                <li>
+                                    <b>Status:</b> ${status}
+                                </li>
+                            </ul>
+                        </p>
+                        <a href="${redirect}" class="btn btn-primary" target="_blank">Track</a>
+                    </div>
+                </div>
+            </div>
         `;
     });
 </script>
