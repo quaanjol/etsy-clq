@@ -47,7 +47,6 @@ class BigcomOriginalController extends Controller
         $heading = ["vietnamese" => "Tạo file order", "english" => "Dashboard"];
         $file = $request->file;
         $csv = array_map('str_getcsv', file($file));
-        // dd($csv);
         $bsManagements = [];
         foreach($csv as $index => $row) {
             if($index == 0) {
@@ -55,73 +54,83 @@ class BigcomOriginalController extends Controller
             }
 
             try {
-                $nameColumn = explode(", ", $row[31])[3];
-                $quantityColumn = explode(", ", $row[31])[1];
-                $variationColumn = explode(", ", $row[31])[4];
-                $prdName = explode(": ", $nameColumn)[1];
-                if(strpos($prdName, "Bedding Set") !== false) {
-                    // dd($prdName);
-                    $bsManagement = new BsManagement();
-                    $bsManagement->order_date = "'" . date("ymd");
-                    $bsManagement->tracking_number = '';
-                    $bsManagement->order_number = strtoupper($row[0]) . "#" . $row[1];
-                    $bsManagement->order_date2 = $row[3];
-                    $bsManagement->customer_note = "";
-                    $bsManagement->email_billing = $row[9];
-                    $bsManagement->order_status = "";
-                    $bsManagement->paid_date = "";
-                    $bsManagement->shipping_method = $row[11];
-                    $bsManagement->shipping_method2 = "";
-                    $bsManagement->quantity = explode(": ", $quantityColumn)[1];
-                    $bsManagement->item_name = $prdName;
-                    $bsManagement->sku = "";
-                    $bsManagement->full_name = $row[8];
-                    $bsManagement->address1 = $row[21];
-                    $bsManagement->address2 = $row[22];
-                    $bsManagement->city = $row[23];
-                    $bsManagement->state_code = $row[24];
-                    $bsManagement->zip_code = $row[26];
-                    $bsManagement->country_code = $row[27];
-                    if(strpos($row[29], "+") !== false) {
-                        $bsManagement->phone = "'" . str_replace("+", "", $row[29]);
-                    } else {
-                        $bsManagement->phone = "'" . $row[29];
+                $prdDetails = [];
+
+                if(strpos($row[31], "|")) {
+                    $prdDetails = explode("|", $row[31]);
+                } else {
+                    $prdDetails[] = strpos($row[31]);
+                }
+                
+                foreach($prdDetails as $prdDetail) {
+                    $nameColumn = explode(", ", $prdDetail)[3];
+                    $quantityColumn = explode(", ", $prdDetail)[1];
+                    $variationColumn = explode(", ", $prdDetail)[4];
+                    $prdName = explode(": ", $nameColumn)[1];
+                    if(strpos($prdName, "Bedding Set") !== false) {
+                        // dd($prdName);
+                        $bsManagement = new BsManagement();
+                        $bsManagement->order_date = "'" . date("ymd");
+                        $bsManagement->tracking_number = '';
+                        $bsManagement->order_number = strtoupper($row[0]) . "#" . $row[1];
+                        $bsManagement->order_date2 = $row[3];
+                        $bsManagement->customer_note = "";
+                        $bsManagement->email_billing = $row[9];
+                        $bsManagement->order_status = "";
+                        $bsManagement->paid_date = "";
+                        $bsManagement->shipping_method = $row[11];
+                        $bsManagement->shipping_method2 = "";
+                        $bsManagement->quantity = explode(": ", $quantityColumn)[1];
+                        $bsManagement->item_name = $prdName;
+                        $bsManagement->sku = "";
+                        $bsManagement->full_name = $row[8];
+                        $bsManagement->address1 = $row[21];
+                        $bsManagement->address2 = $row[22];
+                        $bsManagement->city = $row[23];
+                        $bsManagement->state_code = $row[24];
+                        $bsManagement->zip_code = $row[26];
+                        $bsManagement->country_code = $row[27];
+                        if(strpos($row[29], "+") !== false) {
+                            $bsManagement->phone = "'" . str_replace("+", "", $row[29]);
+                        } else {
+                            $bsManagement->phone = "'" . $row[29];
+                        }
+                        $bsManagement->transaction_id = $row[32];
+                        $bsManagement->product_variation = explode(": ", $variationColumn)[2];
+                        $bsManagement->image_url = '';
+                        $bsManagement->order_refund_amount = '';
+                        $bsManagement->customer_note2 = "";
+                        $bsManagement->item_sku = '';
+                        $bsManagement->quantity2 = explode(": ", $quantityColumn)[1];
+                        if($bsManagement->product_variation == 'AU Double') {
+                            $bsManagement->base_cost = 28;
+                        } else if(trim($bsManagement->product_variation, " ") == 'EU Super King') {
+                            $bsManagement->base_cost = 35;
+                        } else if(trim($bsManagement->product_variation, " ") == 'EU King') {
+                            $bsManagement->base_cost = 28;
+                        } else if(trim($bsManagement->product_variation, " ") == 'EU Double') {
+                            $bsManagement->base_cost = 27;
+                        } else if(trim($bsManagement->product_variation, " ") == 'EU Single') {
+                            $bsManagement->base_cost = 24;
+                        } else if(trim($bsManagement->product_variation, " ") == 'AU Queen') {
+                            $bsManagement->base_cost = 30;
+                        } else if(trim($bsManagement->product_variation, " ") == 'AU Single') {
+                            $bsManagement->base_cost = 26;
+                        } else if(trim($bsManagement->product_variation, " ") == 'AU King') {
+                            $bsManagement->base_cost = 32;
+                        } else if(trim($bsManagement->product_variation, " ") == 'US King') {
+                            $bsManagement->base_cost = 35;
+                        } else if(trim($bsManagement->product_variation, " ") == 'US Twin') {
+                            $bsManagement->base_cost = 26;
+                        } else if(trim($bsManagement->product_variation, " ") == 'US Full') {
+                            $bsManagement->base_cost = 30;
+                        } else if(trim($bsManagement->product_variation, " ") == 'Us Queen') {
+                            $bsManagement->base_cost = 31;
+                        }
+                        
+                        $bsManagement->total_price = (float)$bsManagement->base_cost*(float)$bsManagement->quantity2;
+                        $bsManagements[] = $bsManagement;
                     }
-                    $bsManagement->transaction_id = $row[32];
-                    $bsManagement->product_variation = explode(": ", $variationColumn)[2];
-                    $bsManagement->image_url = '';
-                    $bsManagement->order_refund_amount = '';
-                    $bsManagement->customer_note2 = "";
-                    $bsManagement->item_sku = '';
-                    $bsManagement->quantity2 = explode(": ", $quantityColumn)[1];
-                    if($bsManagement->product_variation == 'AU Double') {
-                        $bsManagement->base_cost = 28;
-                    } else if(trim($bsManagement->product_variation, " ") == 'EU Super King') {
-                        $bsManagement->base_cost = 35;
-                    } else if(trim($bsManagement->product_variation, " ") == 'EU King') {
-                        $bsManagement->base_cost = 28;
-                    } else if(trim($bsManagement->product_variation, " ") == 'EU Double') {
-                        $bsManagement->base_cost = 27;
-                    } else if(trim($bsManagement->product_variation, " ") == 'EU Single') {
-                        $bsManagement->base_cost = 24;
-                    } else if(trim($bsManagement->product_variation, " ") == 'AU Queen') {
-                        $bsManagement->base_cost = 30;
-                    } else if(trim($bsManagement->product_variation, " ") == 'AU Single') {
-                        $bsManagement->base_cost = 26;
-                    } else if(trim($bsManagement->product_variation, " ") == 'AU King') {
-                        $bsManagement->base_cost = 32;
-                    } else if(trim($bsManagement->product_variation, " ") == 'US King') {
-                        $bsManagement->base_cost = 35;
-                    } else if(trim($bsManagement->product_variation, " ") == 'US Twin') {
-                        $bsManagement->base_cost = 26;
-                    } else if(trim($bsManagement->product_variation, " ") == 'US Full') {
-                        $bsManagement->base_cost = 30;
-                    } else if(trim($bsManagement->product_variation, " ") == 'Us Queen') {
-                        $bsManagement->base_cost = 31;
-                    }
-                    
-                    $bsManagement->total_price = (float)$bsManagement->base_cost*(float)$bsManagement->quantity2;
-                    $bsManagements[] = $bsManagement;
                 }
             } catch (Exception $e) {
                 
@@ -177,6 +186,9 @@ class BigcomOriginalController extends Controller
         }
         // dd($excelArray);
         return Excel::download(new BsManagementExports($excelArray), 'bs-management.csv');
+        // return view('admin.web.bigcomoriginal.fileOrderPreview')->with([
+        //     'excelArray' => $excelArray,
+        // ]);
     }
 
     // file order handle
@@ -314,147 +326,158 @@ class BigcomOriginalController extends Controller
             }
 
             try {
-                $nameColumn = explode(", ", $row[31])[3];
-                $quantityColumn = explode(", ", $row[31])[1];
-                $variationColumn = explode(", ", $row[31])[4];
-                $prdName = explode(": ", $nameColumn)[1];
-                if(strpos($prdName, "Bedding Set") == false) {
-                    // dd($prdName);
-                    $cvds = new CvDs();
-                    $cvds->reference_id = strtoupper($row[0]) . "#" . $row[1];
-                    $cvds->quantity = explode(": ", $quantityColumn)[1];
+                $prdDetails = [];
 
-                    // default resize 1 and position 1
-                    $cvds->resize1 = "fill";
-                    $cvds->position1 = "center_center";
-                    
-                    $size = explode(": ", $variationColumn)[2];
-                    // in case of canvas poster
-                    if(strpos($prdName, "Wall Art Poster") !== false) {
-                        if(strpos($size, "in") !== false) {
-                            $size = str_replace("in", "", $size);
-                            $cvds->print_area_key1 = $size;
-                            if($size == "10x8") {
-                                $cvds->item_variant_id = "1227";
-                            } elseif ($size == "8x10") {
-                                $cvds->item_variant_id = "1226";
-                            } elseif ($size == "24x16") {
-                                $cvds->item_variant_id = "4333";
-                            } elseif ($size == "16x24") {
-                                $cvds->item_variant_id = "4329";
-                            } elseif ($size == "40x27") {
-                                $cvds->item_variant_id = "4339";
-                            } elseif ($size == "27x40") {
-                                $cvds->item_variant_id = "4336";
-                            }
-                        }
-                    }
-
-                    // in case of canvas blanket
-                    if(strpos($prdName, "Blanket") !== false) {
-                        $cvds->print_area_key1 = $size;
-                        if($size == "30x40") {
-                            $cvds->item_variant_id = "746";
-                        } elseif ($size == "50x60") {
-                            $cvds->item_variant_id = "747";
-                        } elseif ($size == "60x80") {
-                            $cvds->item_variant_id = "748";
-                        }
-                    }
-
-                    // in case of canvas wall art 1P, 3P, 5P
-                    if(strpos($prdName, "Canvas Wall Decor") !== false || strpos($prdName, "Canvas Art Print") !== false) {
-                        if(strpos($size, " ") !== false) {
-                            $panel = explode(" ", $size)[0];
-                            $size = explode(" ", $size)[1];
+                if(strpos($row[31], "|")) {
+                    $prdDetails = explode("|", $row[31]);
+                } else {
+                    $prdDetails[] = strpos($row[31]);
+                }
+                
+                foreach($prdDetails as $prdDetail) {
+                    $nameColumn = explode(", ", $prdDetail)[3];
+                    $quantityColumn = explode(", ", $prdDetail)[1];
+                    $variationColumn = explode(", ", $prdDetail)[4];
+                    $prdName = explode(": ", $nameColumn)[1];
+                    if(strpos($prdName, "Bedding Set") == false) {
+                        // dd($prdName);
+                        $cvds = new CvDs();
+                        $cvds->reference_id = strtoupper($row[0]) . "#" . $row[1];
+                        $cvds->quantity = explode(": ", $quantityColumn)[1];
     
-                            if ($panel == "1P") {
+                        // default resize 1 and position 1
+                        $cvds->resize1 = "fill";
+                        $cvds->position1 = "center_center";
+                        
+                        $size = explode(": ", $variationColumn)[2];
+                        // in case of canvas poster
+                        if(strpos($prdName, "Wall Art Poster") !== false) {
+                            if(strpos($size, "in") !== false) {
+                                $size = str_replace("in", "", $size);
                                 $cvds->print_area_key1 = $size;
                                 if($size == "10x8") {
-                                    $cvds->item_variant_id = "750";
+                                    $cvds->item_variant_id = "1227";
+                                } elseif ($size == "8x10") {
+                                    $cvds->item_variant_id = "1226";
                                 } elseif ($size == "24x16") {
-                                    $cvds->item_variant_id = "758";
-                                } elseif ($size == "36x24") {
-                                    $cvds->item_variant_id = "760";
-                                } elseif ($size == "48x32") {
-                                    $cvds->item_variant_id = "762";
-                                }
-                            } elseif ($panel == "3P") {
-                                $cvds->resize2 = "fill";
-                                $cvds->position2 = "center_center";
-                                $cvds->resize3 = "fill";
-                                $cvds->position3 = "center_center";
-
-                                if ($size == "38x18") {
-                                    $cvds->print_area_key1 = "1_12x18";
-                                    $cvds->print_area_key2 = "2_12x18";
-                                    $cvds->print_area_key3 = "3_12x18";
-                                    $cvds->item_variant_id = "3375";
-                                } elseif ($size == "50x24") {
-                                    $cvds->print_area_key1 = "1_16x24";
-                                    $cvds->print_area_key2 = "2_16x24";
-                                    $cvds->print_area_key3 = "3_16x24";
-                                    $cvds->item_variant_id = "3376";
-                                }
-                            } elseif ($panel == "5P") {
-                                $cvds->resize2 = "fill";
-                                $cvds->position2 = "center_center";
-                                $cvds->resize3 = "fill";
-                                $cvds->position3 = "center_center";
-                                $cvds->resize4 = "fill";
-                                $cvds->position4 = "center_center";
-                                $cvds->resize5 = "fill";
-                                $cvds->position5 = "center_center";
-
-                                if ($size == "64x32") {
-                                    $cvds->print_area_key1 = "1_12x16";
-                                    $cvds->print_area_key2 = "2_12x16";
-                                    $cvds->print_area_key3 = "3_12x24";
-                                    $cvds->print_area_key4 = "4_12x24";
-                                    $cvds->print_area_key5 = "5_12x32";
-                                    $cvds->item_variant_id = "3378";
-                                } elseif ($size == "64x36") {
-                                    $cvds->print_area_key1 = "1_12x36";
-                                    $cvds->print_area_key2 = "2_12x36";
-                                    $cvds->print_area_key3 = "3_12x36";
-                                    $cvds->print_area_key4 = "4_12x36";
-                                    $cvds->print_area_key5 = "5_12x36";
-                                    $cvds->item_variant_id = "3379";
-                                } elseif ($size == "84x40") {
-                                    $cvds->print_area_key1 = "1_16x24";
-                                    $cvds->print_area_key2 = "2_16x24";
-                                    $cvds->print_area_key3 = "3_16x32";
-                                    $cvds->print_area_key4 = "4_16x32";
-                                    $cvds->print_area_key5 = "5_16x40";
-                                    $cvds->item_variant_id = "3377";
-                                } elseif ($size == "84x48") {
-                                    $cvds->print_area_key1 = "1_16x48";
-                                    $cvds->print_area_key2 = "2_16x48";
-                                    $cvds->print_area_key3 = "3_16x48";
-                                    $cvds->print_area_key4 = "4_16x48";
-                                    $cvds->print_area_key5 = "5_16x48";
-                                    $cvds->item_variant_id = "3380";
+                                    $cvds->item_variant_id = "4333";
+                                } elseif ($size == "16x24") {
+                                    $cvds->item_variant_id = "4329";
+                                } elseif ($size == "40x27") {
+                                    $cvds->item_variant_id = "4339";
+                                } elseif ($size == "27x40") {
+                                    $cvds->item_variant_id = "4336";
                                 }
                             }
-    
                         }
+    
+                        // in case of canvas blanket
+                        if(strpos($prdName, "Blanket") !== false) {
+                            $cvds->print_area_key1 = $size;
+                            if($size == "30x40") {
+                                $cvds->item_variant_id = "746";
+                            } elseif ($size == "50x60") {
+                                $cvds->item_variant_id = "747";
+                            } elseif ($size == "60x80") {
+                                $cvds->item_variant_id = "748";
+                            }
+                        }
+    
+                        // in case of canvas wall art 1P, 3P, 5P
+                        if(strpos($prdName, "Canvas Wall Decor") !== false || strpos($prdName, "Canvas Art Print") !== false) {
+                            if(strpos($size, " ") !== false) {
+                                $panel = explode(" ", $size)[0];
+                                $size = explode(" ", $size)[1];
+        
+                                if ($panel == "1P") {
+                                    $cvds->print_area_key1 = $size;
+                                    if($size == "10x8") {
+                                        $cvds->item_variant_id = "750";
+                                    } elseif ($size == "24x16") {
+                                        $cvds->item_variant_id = "758";
+                                    } elseif ($size == "36x24") {
+                                        $cvds->item_variant_id = "760";
+                                    } elseif ($size == "48x32") {
+                                        $cvds->item_variant_id = "762";
+                                    }
+                                } elseif ($panel == "3P") {
+                                    $cvds->resize2 = "fill";
+                                    $cvds->position2 = "center_center";
+                                    $cvds->resize3 = "fill";
+                                    $cvds->position3 = "center_center";
+    
+                                    if ($size == "38x18") {
+                                        $cvds->print_area_key1 = "1_12x18";
+                                        $cvds->print_area_key2 = "2_12x18";
+                                        $cvds->print_area_key3 = "3_12x18";
+                                        $cvds->item_variant_id = "3375";
+                                    } elseif ($size == "50x24") {
+                                        $cvds->print_area_key1 = "1_16x24";
+                                        $cvds->print_area_key2 = "2_16x24";
+                                        $cvds->print_area_key3 = "3_16x24";
+                                        $cvds->item_variant_id = "3376";
+                                    }
+                                } elseif ($panel == "5P") {
+                                    $cvds->resize2 = "fill";
+                                    $cvds->position2 = "center_center";
+                                    $cvds->resize3 = "fill";
+                                    $cvds->position3 = "center_center";
+                                    $cvds->resize4 = "fill";
+                                    $cvds->position4 = "center_center";
+                                    $cvds->resize5 = "fill";
+                                    $cvds->position5 = "center_center";
+    
+                                    if ($size == "64x32") {
+                                        $cvds->print_area_key1 = "1_12x16";
+                                        $cvds->print_area_key2 = "2_12x16";
+                                        $cvds->print_area_key3 = "3_12x24";
+                                        $cvds->print_area_key4 = "4_12x24";
+                                        $cvds->print_area_key5 = "5_12x32";
+                                        $cvds->item_variant_id = "3378";
+                                    } elseif ($size == "64x36") {
+                                        $cvds->print_area_key1 = "1_12x36";
+                                        $cvds->print_area_key2 = "2_12x36";
+                                        $cvds->print_area_key3 = "3_12x36";
+                                        $cvds->print_area_key4 = "4_12x36";
+                                        $cvds->print_area_key5 = "5_12x36";
+                                        $cvds->item_variant_id = "3379";
+                                    } elseif ($size == "84x40") {
+                                        $cvds->print_area_key1 = "1_16x24";
+                                        $cvds->print_area_key2 = "2_16x24";
+                                        $cvds->print_area_key3 = "3_16x32";
+                                        $cvds->print_area_key4 = "4_16x32";
+                                        $cvds->print_area_key5 = "5_16x40";
+                                        $cvds->item_variant_id = "3377";
+                                    } elseif ($size == "84x48") {
+                                        $cvds->print_area_key1 = "1_16x48";
+                                        $cvds->print_area_key2 = "2_16x48";
+                                        $cvds->print_area_key3 = "3_16x48";
+                                        $cvds->print_area_key4 = "4_16x48";
+                                        $cvds->print_area_key5 = "5_16x48";
+                                        $cvds->item_variant_id = "3380";
+                                    }
+                                }
+        
+                            }
+                        }
+    
+                        $cvds->first_name = $row[18];
+                        $cvds->last_name = $row[19];
+                        $cvds->street1 = $row[21];
+                        $cvds->street2 = $row[22];
+                        $cvds->city = $row[23];
+                        $cvds->state = $row[24];
+                        $cvds->country = $row[27];
+                        $cvds->zip = $row[26];
+                        if(strpos($row[29], "+") !== false) {
+                            $cvds->phone = "'" . str_replace("+", "", $row[29]);
+                        } else {
+                            $cvds->phone = "'" . $row[29];
+                        }
+                        $cvdses[] = $cvds;
                     }
-
-                    $cvds->first_name = $row[18];
-                    $cvds->last_name = $row[19];
-                    $cvds->street1 = $row[21];
-                    $cvds->street2 = $row[22];
-                    $cvds->city = $row[23];
-                    $cvds->state = $row[24];
-                    $cvds->country = $row[27];
-                    $cvds->zip = $row[26];
-                    if(strpos($row[29], "+") !== false) {
-                        $cvds->phone = "'" . str_replace("+", "", $row[29]);
-                    } else {
-                        $cvds->phone = "'" . $row[29];
-                    }
-                    $cvdses[] = $cvds;
                 }
+
             } catch (Exception $e) {
 
             }

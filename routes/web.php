@@ -44,6 +44,10 @@ Route::group(['middleware' => 'auth'], function () {
     // Route::get('/admin/bigcomoriginal/convert/cv/order', 'App\Http\Controllers\BigcomOriginalController@convertBso')->name('bigcomoriginal.bso.convert');
     // Route::post('/admin/bigcomoriginal/convert/cv/order', 'App\Http\Controllers\BigcomOriginalController@convertBsoStore')->name('bigcomoriginal.bso.convert.store');
 
+    // shopify
+    Route::get('/admin/shopify/convert/cv/dreamship', 'App\Http\Controllers\ShopifyOriginalController@show')->name('shopify.cvds.convert');
+    Route::post('/admin/shopify/convert/cv/dreamship', 'App\Http\Controllers\ShopifyOriginalController@convertCanvasDsStore')->name('shopify.cvds.convert.store');
+
     // tracking
     Route::get('/admin/tracking/dreamship', 'App\Http\Controllers\TrackingController@trackingDs')->name('tracking.dreamship');
     Route::get('/admin/tracking/dreamship/afterdate', 'App\Http\Controllers\TrackingController@trackingDsAfterDate')->name('tracking.dreamship.afterdate');
