@@ -59,7 +59,7 @@ class BigcomOriginalController extends Controller
                 if(strpos($row[31], "|")) {
                     $prdDetails = explode("|", $row[31]);
                 } else {
-                    $prdDetails[] = strpos($row[31]);
+                    $prdDetails[] = $row[31];
                 }
                 
                 foreach($prdDetails as $prdDetail) {
@@ -331,7 +331,7 @@ class BigcomOriginalController extends Controller
                 if(strpos($row[31], "|")) {
                     $prdDetails = explode("|", $row[31]);
                 } else {
-                    $prdDetails[] = strpos($row[31]);
+                    $prdDetails[] = $row[31];
                 }
                 
                 foreach($prdDetails as $prdDetail) {
