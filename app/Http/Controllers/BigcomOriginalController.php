@@ -63,9 +63,9 @@ class BigcomOriginalController extends Controller
                 }
                 
                 foreach($prdDetails as $prdDetail) {
-                    $nameColumn = explode(", ", $prdDetail)[3];
-                    $quantityColumn = explode(", ", $prdDetail)[1];
-                    $variationColumn = explode(", ", $prdDetail)[4];
+                    $nameColumn = explode(", P", $prdDetail)[3];
+                    $quantityColumn = explode(", P", $prdDetail)[1];
+                    $variationColumn = explode(", P", $prdDetail)[4];
                     $prdName = explode(": ", $nameColumn)[1];
                     if(strpos($prdName, "Bedding Set") !== false) {
                         // dd($prdName);
@@ -335,9 +335,9 @@ class BigcomOriginalController extends Controller
                 }
                 
                 foreach($prdDetails as $prdDetail) {
-                    $nameColumn = explode(", ", $prdDetail)[3];
-                    $quantityColumn = explode(", ", $prdDetail)[1];
-                    $variationColumn = explode(", ", $prdDetail)[4];
+                    $nameColumn = explode(", P", $prdDetail)[3];
+                    $quantityColumn = explode(", P", $prdDetail)[1];
+                    $variationColumn = explode(", P", $prdDetail)[4];
                     $prdName = explode(": ", $nameColumn)[1];
                     if(strpos($prdName, "Bedding Set") == false) {
                         // dd($prdName);
@@ -348,7 +348,10 @@ class BigcomOriginalController extends Controller
                         // default resize 1 and position 1
                         $cvds->resize1 = "fill";
                         $cvds->position1 = "center_center";
-                        
+
+                        if(count(explode(": ", $variationColumn)) < 3) {
+                            dd($variationColumn);
+                        }
                         $size = explode(": ", $variationColumn)[2];
                         // in case of canvas poster
                         if(strpos($prdName, "Wall Art Poster") !== false) {
