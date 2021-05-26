@@ -67,7 +67,7 @@ class BigcomOriginalController extends Controller
                     $quantityColumn = explode(", P", $prdDetail)[1];
                     $variationColumn = explode(", P", $prdDetail)[4];
                     $prdName = explode(": ", $nameColumn)[1];
-                    if(strpos($prdName, "Bedding Set") !== false) {
+                    if(strpos($prdName, "Bedding Set") !== false && strpos($prdName, "Rug, Quilt, Bedding Set, Landscape Canvas") == false) {
                         // dd($prdName);
                         $bsManagement = new BsManagement();
                         $bsManagement->order_date = "'" . date("ymd");

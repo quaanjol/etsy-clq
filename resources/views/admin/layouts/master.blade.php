@@ -69,6 +69,7 @@
                     <a class="collapse-item" href="{{ route('bigcomoriginal.bsm.convert') }}">BS Management</a>
                     <a class="collapse-item" href="{{ route('bigcomoriginal.bso.convert') }}">BS Order Wong</a>
                     <a class="collapse-item" href="{{ route('bigcomoriginal.cvds.convert') }}">CV Order Dreamship</a>
+                    <a class="collapse-item" href="{{ route('cbqr.convert') }}">CBQR</a>
                 </div>
             </div>
         </li>

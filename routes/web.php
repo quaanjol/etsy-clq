@@ -55,5 +55,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/admin/tracking/dreamship/betweendate', 'App\Http\Controllers\TrackingController@trackingDsBetweenDate')->name('tracking.dreamship.betweendate');
     Route::get('/admin/tracking/dreamship/result', 'App\Http\Controllers\TrackingController@trackingDsGet')->name('tracking.dreamship.get');
     
-    
+    // cbqr
+    Route::get('/admin/cbqr/convert', 'App\Http\Controllers\CbqrController@convert')->name('cbqr.convert');
+    Route::post('/admin/cbqr/convert', 'App\Http\Controllers\CbqrController@convertStore')->name('cbqr.convert.store');
 });
