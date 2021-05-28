@@ -349,12 +349,13 @@ class BigcomOriginalController extends Controller
                         $cvds->resize1 = "fill";
                         $cvds->position1 = "center_center";
 
-                        if(count(explode(": ", $variationColumn)) < 3) {
-                            dd($variationColumn);
-                        }
+                        // if(count(explode(": ", $variationColumn)) < 3) {
+                        //     dd($variationColumn);
+                        // }
                         $size = explode(": ", $variationColumn)[2];
                         // in case of canvas poster
-                        if(strpos($prdName, "Wall Art Poster") !== false) {
+                        if(strpos($prdName, "Wall Art Poster") !== false || strpos($prdName, "Poster Art") !== false) {
+                            // dd($size);
                             if(strpos($size, "in") !== false) {
                                 $size = str_replace("in", "", $size);
                                 $cvds->print_area_key1 = $size;
@@ -388,9 +389,29 @@ class BigcomOriginalController extends Controller
     
                         // in case of canvas wall art 1P, 3P, 5P
                         if(strpos($prdName, "Canvas Wall Decor") !== false || strpos($prdName, "Canvas Art Print") !== false) {
+                            // dd($variationColumn);
                             if(strpos($size, " ") !== false) {
                                 $panel = explode(" ", $size)[0];
-                                $size = explode(" ", $size)[1];
+                                $size = str_replace(",", "", explode(" ", $size)[1]);
+
+                                $customOrNot = '';
+                                $customMsg = '';
+                                $customPosition = '';
+
+                                // dd($panel . ' ' . $size);
+
+                                if(strpos($variationColumn, "Want to add a gift message onto your wall art?") !== false) {
+                                    $customOrNot = explode(", ", explode(": ", $variationColumn)[3])[0];
+                                    if(isset(explode(": ", $variationColumn)[4])) {
+                                        $customMsg = explode(", ", explode(": ", $variationColumn)[4])[0];
+                                    }
+
+                                    if(isset(explode(": ", $variationColumn)[4])) {
+                                        $customPosition = explode(": ", $variationColumn)[5];
+                                    }
+                                    
+                                    $cvds->test_order = "Custom: " . $customOrNot . ', Message: ' . $customMsg . ', Position: ' . $customPosition;
+                                }
         
                                 if ($panel == "1P") {
                                     $cvds->print_area_key1 = $size;
@@ -464,6 +485,7 @@ class BigcomOriginalController extends Controller
                             }
                         }
     
+                        // dd('vid ' .  $cvds->item_variant_id);
                         $cvds->first_name = $row[18];
                         $cvds->last_name = $row[19];
                         $cvds->street1 = $row[21];
