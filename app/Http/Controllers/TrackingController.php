@@ -71,9 +71,9 @@ class TrackingController extends Controller
             'Content-Type' => 'application/json'
         ])->get('https://api.dreamship.com/v1/orders', $bodyContent);
 
-        // dd($response->body());
+        // dd(str_replace("'", "", $response->body()));
         return view('admin.web.tracking.result')->with([
-            'result' => $response->body(),
+            'result' => str_replace("'", "", $response->body()),
             'theme' => $theme,
             'user' => $user,
             'heading' => $heading

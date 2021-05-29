@@ -42,10 +42,10 @@ Dreamship Tracking Result
 @section('scripts')
 <script>
     document.getElementById('trackingLi').classList.add('active');
-
-    var result = JSON.parse('{!! ($result) !!}');
+    console.log({!! $result !!});
+    var result = JSON.parse('{!! $result !!}');
     var data = result.data;
-    console.log(data);
+    console.log('data', data);
     document.getElementById('count').textContent = data.length;
 
     Array.from(data).forEach(item => {
