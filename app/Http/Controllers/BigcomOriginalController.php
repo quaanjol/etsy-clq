@@ -407,7 +407,9 @@ class BigcomOriginalController extends Controller
                                     }
 
                                     if(isset(explode(": ", $variationColumn)[4])) {
-                                        $customPosition = explode(": ", $variationColumn)[5];
+                                        if(isset(explode(": ", $variationColumn)[5])) {
+                                            $customPosition = explode(": ", $variationColumn)[5];
+                                        }
                                     }
                                     
                                     $cvds->test_order = "Custom: " . $customOrNot . ', Message: ' . $customMsg . ', Position: ' . $customPosition;
