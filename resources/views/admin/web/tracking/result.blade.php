@@ -30,84 +30,152 @@ Dreamship Tracking Result
         <div class="card-body">
             <div class="mb-3">
                 <small class="text-danger">
-                    Tổng số order tìm được: <span id="count"></span>
+                    Tổng số order tìm được: <span id="count">{{ count($result) }}</span>
                 </small>
             </div>
-            <div id="list" class="row"></div>
-        </div>
-      </div>
-</div>
-@endsection
+            <div class="mb-3">
+                <form action="{{ route('tracking.dreamship.export') }}" method="post">
+                @csrf
 
-@section('scripts')
-<script>
-    document.getElementById('trackingLi').classList.add('active');
-    console.log({!! $result !!});
-    var result = JSON.parse('{!! $result !!}');
-    var data = result.data;
-    console.log('data', data);
-    document.getElementById('count').textContent = data.length;
+                <input type="hidden" name="total_order" value="{{ count($result) }}">
 
-    Array.from(data).forEach(item => {
-        var datee = item.created_at.split("T")[0];
-        if(item.fulfillments[0].trackings.length == 0) {
-            var carrier = "Unknown";
-            var tracking = "Unknown";
-            var status = "Not available yet";
-        } else {
-            var carrier = item.fulfillments[0].trackings[0].carrier;
-            var tracking = item.fulfillments[0].trackings[0].tracking_number;
-            var status = item.fulfillments[0].trackings[0].status;
-        }
+                @foreach($result as $formIndex => $item)
+                <input type="hidden" name="{{ $formIndex }}_order_number" value="{{ $item->reference_id }}">
+                <input type="hidden" name="{{ $formIndex }}_created_at" value="{{  explode('T', $item->created_at)[0] }}">
+                <input type="hidden" name="{{ $formIndex }}_total_cost" value="${{ $item->total_cost }}">
+                
+                @if(count($item->fulfillments) == 0)
+                <input type="hidden" name="{{ $formIndex }}_carrer" value="Not available yet">
+                @else
+                    @if(count($item->fulfillments[0]->trackings) == 0)
+                    <input type="hidden" name="{{ $formIndex }}_carrer" value="Not available yet">
+                    @else
+                    <input type="hidden" name="{{ $formIndex }}_carrer" value="{{ $item->fulfillments[0]->trackings[0]->carrier }}">
+                    @endif
+                @endif
 
-        var redirect = '#';
-        if(carrier == 'RoyalMail') {
-            redirect = 'https://www3.royalmail.com/track-your-item#/tracking-results/' + tracking;
-        } else if(carrier == 'DHLExpress') {
-            redirect = 'https://www.dhl.com/us-en/home/tracking/tracking-ecommerce.html?submit=1&tracking-id=' + tracking;
-        } else if(carrier == 'FedEx') {
-            redirect = 'https://www.fedex.com/apps/fedextrack/?action=track&action=track&tracknumbers=' + tracking;
-        } else if(carrier == 'UPS') {
-            redirect = 'https://www.ups.com/WebTracking?loc=en_US&requester=ST&trackNums=' + tracking + '/trackdetails';
-        } else if(carrier == 'Fastway') {
-            redirect = 'https://www.aramex.com.au/tools/track/';
-        } else if(carrier == 'AustraliaPost') {
-            redirect = 'https://auspost.com.au/mypost/track/#/search';
-        } else if(carrier == 'GSO') {
-            redirect = 'https://www.gls-us.com/tracking';
-        } else if(carrier == 'USPS') {
-            redirect = 'https://tools.usps.com/go/TrackConfirmAction?qtc_tLabels1=' + tracking;
-        }
-        
-        document.getElementById('list').innerHTML += `
-            <div class="col-md-4 mb-3">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">${item.reference_id}</h5>
-                        <p class="card-text">
-                            <ul class="custom-ul">
-                                <li>
-                                    <b>Total cost:</b> $${item.total_cost}
-                                </li>
-                                <li>
-                                    <b>Created at:</b> ${datee}
-                                </li>
-                                <li>
-                                    <b>Carrier:</b> ${carrier}
-                                </li>
-                                <li>
-                                    <b>Tracking:</b> ${tracking}
-                                </li>
-                                <li>
-                                    <b>Status:</b> ${status}
-                                </li>
-                            </ul>
-                        </p>
-                        <a href="${redirect}" class="btn btn-primary" target="_blank">Track</a>
-                    </div>
-                </div>
+                @if(count($item->fulfillments) == 0)
+                <input type="hidden" name="{{ $formIndex }}_tracking" value="">
+                @else
+                    @if(count($item->fulfillments[0]->trackings) == 0)
+                    <input type="hidden" name="{{ $formIndex }}_tracking" value="">
+                    @else
+                    <input type="hidden" name="{{ $formIndex }}_tracking" value="{{ $item->fulfillments[0]->trackings[0]->tracking_number }}">
+                    @endif
+                @endif
+                
+                @if(count($item->fulfillments) == 0)
+                <input type="hidden" name="{{ $formIndex }}_delivery_status" value="">
+                @else
+                    @if(count($item->fulfillments[0]->trackings) == 0)
+                    <input type="hidden" name="{{ $formIndex }}_delivery_status" value="">
+                    @else
+                    <input type="hidden" name="{{ $formIndex }}_delivery_status" value="{{ $item->fulfillments[0]->trackings[0]->status }}">
+                    @endif
+                @endif
+                
+                @endforeach
+
+                <button class="btn btn-success" type="submit">
+                    Export tracking file
+                </button>
+                </form>
             </div>
-        `;
-    });
-</script>
+            <div class="row table-responsive">
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <td>
+                                Order Number                            
+                            </td>
+                            <td>
+                                Created at
+                            </td>
+                            <td>
+                                Total cost
+                            </td>
+                            <td>
+                                Carrier
+                            </td>
+                            <td>
+                                Tracking
+                            </td>
+                            <td>
+                                Delivery status
+                            </td>
+                            <td>
+                                Rejected status
+                            </td>   
+                            <td>
+                                Track
+                            </td>         
+                        </tr>
+                    </thead>
+                    <tbody id="list">
+                        @foreach($result as $viewIndex => $item)
+                        <tr>
+                            <td>
+                                {{ $item->reference_id }} - {{ $viewIndex }}
+                            </td>
+                            <td>
+                                {{  explode("T", $item->created_at)[0] }}
+                            </td>
+                            <td>
+                                ${{ $item->total_cost }}
+                            </td>
+                            <td class="text-uppercase">
+                                @if(count($item->fulfillments) == 0)
+                                Not available yet
+                                @else
+                                    @if(count($item->fulfillments[0]->trackings) == 0)
+                                    Not available yet
+                                    @else
+                                    {{ $item->fulfillments[0]->trackings[0]->carrier }}
+                                    @endif
+                                @endif
+                            </td>
+                            <td>
+                                @if(count($item->fulfillments) == 0)
+                                
+                                @else
+                                    @if(count($item->fulfillments[0]->trackings) == 0)
+                                    
+                                    @else
+                                    {{ $item->fulfillments[0]->trackings[0]->tracking_number }}
+                                    @endif
+                                @endif
+                            </td>
+                            <td class="text-capitalize">
+                                @if(count($item->fulfillments) == 0)
+                                
+                                @else
+                                    @if(count($item->fulfillments[0]->trackings) == 0)
+                                    
+                                    @else
+                                    {{ $item->fulfillments[0]->trackings[0]->status }}
+                                    @endif
+                                @endif
+                            </td>
+                            <td class="text-capitalize">
+                                {{ $item->rejected_status }}
+                            </td>   
+                            <td>
+                                @if(count($item->fulfillments) == 0)
+                                <button class="btn btn-primary" disabled="true">Track</button>
+                                @else
+                                    @if(count($item->fulfillments[0]->trackings) == 0)
+                                    <button class="btn btn-primary" disabled="true">Track</button>
+                                    @else
+                                    <a href="{{ $item->fulfillments[0]->trackings[0]->tracking_url }}" class="btn btn-primary" target="_blank">Track</a>
+                                    @endif
+                                @endif
+                            </td>         
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

@@ -79,6 +79,13 @@ class CreateShopifyOriginalsTable extends Migration
             $table->string('tax3_value');
             $table->string('tax4_name');
             $table->string('tax4_value');
+            $table->string('tax5_name');
+            $table->string('tax5_value');
+            $table->string('phone');
+            $table->string('receipt_number');
+            $table->string('duties');
+            $table->string('billing_province_name');
+            $table->string('shipping_province_name');
             $table->timestamps();
         });
     }

@@ -37,7 +37,7 @@ Shopify Convert
 
 @section('scripts')
 <script>
-    document.getElementById('bigcommerceLi').classList.add('active');
+    document.getElementById('shopifyLi').classList.add('active');
 
 
     var _validFileExtensions = [".xlsx", ".csv"];  

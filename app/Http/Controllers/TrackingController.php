@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\TrackingExport;
 
 class TrackingController extends Controller
 {
@@ -66,18 +68,41 @@ class TrackingController extends Controller
         }
         // dd($bodyContent);
 
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $apiKey,
-            'Content-Type' => 'application/json'
-        ])->get('https://api.dreamship.com/v1/orders', $bodyContent);
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . $apiKey,
+                'Content-Type' => 'application/json'
+            ])->get('https://api.dreamship.com/v1/orders', $bodyContent);
+    
+            $data = json_decode(str_replace("'", "", $response->body()));
+    
+            // Sort and print the resulting array
+            uasort($data->data, array( $this, 'cmp' ));
+            
+            // dd($data->data);
+            return view('admin.web.tracking.result')->with([
+                'result' => $data->data,
+                'theme' => $theme,
+                'user' => $user,
+                'heading' => $heading
+            ]);
+        } catch(\Exception $e) {
+            $request->session()->flash('warning', $e->getMessage());
+            return view('admin.web.tracking.result')->with([
+                'result' => [],
+                'theme' => $theme,
+                'user' => $user,
+                'heading' => $heading
+            ]);
+        }
+    }
 
-        // dd(str_replace("'", "", $response->body()));
-        return view('admin.web.tracking.result')->with([
-            'result' => str_replace("'", "", $response->body()),
-            'theme' => $theme,
-            'user' => $user,
-            'heading' => $heading
-        ]);
+    // Comparison function
+    public function cmp($a, $b) {
+        if ($a->reference_id == $b->reference_id) {
+            return 0;
+        }
+        return ($a->reference_id < $b->reference_id) ? -1 : 1;
     }
 
     public function trackingDsAfterDate(Request $request) {
@@ -132,5 +157,59 @@ class TrackingController extends Controller
             'user' => $user,
             'heading' => $heading,
         ]);
+    }
+
+    public function trackingDsExport(Request $request) {
+        $user = auth()->user();
+        if($user == null) {
+            return redirect('/login');
+        }
+        if($user->role == 'user') {
+            return redirect('/');
+        }
+        
+        $excelArray = [];
+        $totalOrder = $request->total_order;
+        for($i = 0; $i < $totalOrder; $i++) {
+            $tmp = [];
+
+            $thisIndex = $i;
+            $orderNumberInput = $thisIndex . '_order_number';
+            $createdAtInput = $thisIndex . '_created_at';
+            $totalCostInput = $thisIndex . '_total_cost';
+            $carrierInput = $thisIndex . '_carrier';
+            $trackingInput = $thisIndex . '_tracking';
+            $deliveryStatusInput = $thisIndex . '_delivery_status';
+
+            $orderNumber = $request->$orderNumberInput;
+            $createdAt = $request->$createdAtInput;
+            $totalCost = $request->$totalCostInput;
+            $carrier = $request->$carrierInput;
+            $tracking = $request->$trackingInput;
+            $deliveryStatus = $request->$deliveryStatusInput;
+
+            $tmp['order_number'] = $orderNumber;
+            $tmp['created_at'] = $createdAt;
+            $tmp['total_cost'] = $totalCost;
+            $tmp['carrier'] = $carrier;
+            $tmp['tracking'] = $tracking;
+            $tmp['delivery_status'] = $deliveryStatus;
+            array_push($excelArray, $tmp);
+        }
+
+        // Sort and print the resulting array
+        uasort($excelArray, array( $this, 'excelCmp' ));
+        
+        // dd($excelArray);
+        // dd($excelArray);
+        return Excel::download(new TrackingExport($excelArray), 'ds-tracking.xlsx');
+    }
+
+    // Comparison function
+    public function excelCmp($a, $b) {
+        if ($a['order_number'] == $b['order_number']) {
+            return 0;
+        }
+        return ($a['order_number'] < $b['order_number']) ? -1 : 1;
     }
 }
