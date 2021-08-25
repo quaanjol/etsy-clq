@@ -45,12 +45,12 @@ Dreamship Tracking Result
                 <input type="hidden" name="{{ $formIndex }}_total_cost" value="${{ $item->total_cost }}">
                 
                 @if(count($item->fulfillments) == 0)
-                <input type="hidden" name="{{ $formIndex }}_carrer" value="Not available yet">
+                <input type="hidden" name="{{ $formIndex }}_carrier" value="Not available yet">
                 @else
                     @if(count($item->fulfillments[0]->trackings) == 0)
-                    <input type="hidden" name="{{ $formIndex }}_carrer" value="Not available yet">
+                    <input type="hidden" name="{{ $formIndex }}_carrier" value="No tracking yet">
                     @else
-                    <input type="hidden" name="{{ $formIndex }}_carrer" value="{{ $item->fulfillments[0]->trackings[0]->carrier }}">
+                    <input type="hidden" name="{{ $formIndex }}_carrier" value="{{ $item->fulfillments[0]->trackings[0]->carrier }}">
                     @endif
                 @endif
 
@@ -75,6 +75,41 @@ Dreamship Tracking Result
                 @endif
                 
                 @endforeach
+
+                <div class="form-group mb-2">
+                    <select name="order_type" id="order_type" class="form-control">
+                        <option value="" selected>
+                            All orders
+                        </option>
+                        <option value="amz">
+                            AMZ
+                        </option>
+                        <option value="ca">
+                            CA
+                        </option>
+                        <option value="fyi">
+                            FYI
+                        </option>
+                        <option value="hkl">
+                            HKL
+                        </option>
+                        <option value="lkh">
+                            LKH
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group mb-2">
+                    <select name="download_type" id="download_type" class="form-control">
+                        <option value="normal_tracking" selected>
+                            Download tracking file
+                        </option>
+                        <option value="bigcom_add_tracking">
+                            Download Bigcommerce add tracking file
+                        </option>
+                    </select>
+                </div>
+                
 
                 <button class="btn btn-success" type="submit">
                     Export tracking file
@@ -113,7 +148,7 @@ Dreamship Tracking Result
                     </thead>
                     <tbody id="list">
                         @foreach($result as $viewIndex => $item)
-                        <tr>
+                        <tr class="tr_list" data-order_id="{{ $item->reference_id }}">
                             <td>
                                 {{ $item->reference_id }} - {{ $viewIndex }}
                             </td>
@@ -179,3 +214,41 @@ Dreamship Tracking Result
     </div>
 </div>
 @endsection
+
+@section('scripts')
+<script>
+    const order_type = document.getElementById('order_type')
+    const tr_list = document.querySelectorAll('.tr_list');
+
+    Array.from(tr_list).forEach(item => {
+        if(order_type.value == '') {
+            item.style.display = 'table-row'
+        } else {
+            var itemOrderId = item.dataset.order_id
+            
+            if(itemOrderId.toLowerCase().indexOf(order_type.value) != -1) {
+                item.style.display = 'table-row'
+            } else {
+                item.style.display = 'none'
+            }
+        }
+    })
+
+    order_type.addEventListener('change', e => {
+        Array.from(tr_list).forEach(item => {
+            if(e.target.value == '') {
+                item.style.display = 'table-row'
+            } else {
+                var itemOrderId = item.dataset.order_id
+                
+                if(itemOrderId.toLowerCase().indexOf(e.target.value) != -1) {
+                    item.style.display = 'table-row'
+                } else {
+                    item.style.display = 'none'
+                }
+            }
+        })
+    })
+</script>
+@endsection
+

@@ -20,12 +20,21 @@ Update carrier
             <form action="{{ Route('admin.carrier.storeUpdate', ['id' => $carrier->id]) }}" method="post">
                 @csrf
                 <div class="row">
-                    <div class="col-12">
+                    <div class="col-12 col-md-6">
                         <div class="form-group">
                             <label for="name">
                             Name
                             </label>
                             <input type="text" name="name" id="name" class="form-control" value="{{ $carrier->name }}" required>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <div class="form-group">
+                            <label for="ds_name">
+                            Dreamship Name
+                            </label>
+                            <input type="text" name="ds_name" id="ds_name" class="form-control" value="{{ $carrier->ds_name }}">
                         </div>
                     </div>
                     

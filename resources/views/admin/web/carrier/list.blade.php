@@ -62,6 +62,9 @@ All carriers
                                 {{ $carrier->name }}
                             </th>
                             <th>
+                                {{ $carrier->ds_name }}
+                            </th>
+                            <th>
                                 {{ $carrier->bigcom_name }} ({{ $carrier->bigcom_code }})
                             </th>
                             <th>
@@ -73,7 +76,7 @@ All carriers
                             <th>
                                 <a href="{{ Route('admin.carrier.update', ['id' => $carrier->id]) }}">
                                     <button class="btn btn-info">
-                                        Udpate
+                                        Update
                                     </button>
                                 </a>
                             </th>

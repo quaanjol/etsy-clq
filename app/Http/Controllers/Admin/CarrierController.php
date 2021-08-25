@@ -58,6 +58,7 @@ class CarrierController extends Controller
         }
 
         $cname = $request->name;
+        $ds_name = $request->ds_name;
         $bigcom_name = $request->bigcom_name;
         $bigcom_code = $request->bigcom_code;
         $shopify_name = $request->shopify_name;
@@ -67,6 +68,7 @@ class CarrierController extends Controller
 
         $carrier = new Carrier();
         $carrier->name = $cname;
+        $carrier->ds_name = $ds_name;
         $carrier->bigcom_name = $bigcom_name;
         $carrier->bigcom_code = $bigcom_code;
         $carrier->shopify_name = $shopify_name;
@@ -122,6 +124,7 @@ class CarrierController extends Controller
         }
 
         $cname = $request->name;
+        $ds_name = $request->ds_name;
         $bigcom_name = $request->bigcom_name;
         $bigcom_code = $request->bigcom_code;
         $shopify_name = $request->shopify_name;
@@ -130,6 +133,7 @@ class CarrierController extends Controller
         $paypal_code = $request->paypal_code;
 
         $carrier->name = $cname;
+        $carrier->ds_name = $ds_name;
         $carrier->bigcom_name = $bigcom_name;
         $carrier->bigcom_code = $bigcom_code;
         $carrier->shopify_name = $shopify_name;

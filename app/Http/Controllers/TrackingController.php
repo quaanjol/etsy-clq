@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Carrier;
 use Illuminate\Support\Facades\Http;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Exports\TrackingExport;
+use App\Exports\BigcomAddTrackingExport;
 
 class TrackingController extends Controller
 {
@@ -167,42 +169,138 @@ class TrackingController extends Controller
         if($user->role == 'user') {
             return redirect('/');
         }
+
+        $download_type = $request->download_type;
+        $order_type = $request->order_type;
         
         $excelArray = [];
         $totalOrder = $request->total_order;
-        for($i = 0; $i < $totalOrder; $i++) {
-            $tmp = [];
 
-            $thisIndex = $i;
-            $orderNumberInput = $thisIndex . '_order_number';
-            $createdAtInput = $thisIndex . '_created_at';
-            $totalCostInput = $thisIndex . '_total_cost';
-            $carrierInput = $thisIndex . '_carrier';
-            $trackingInput = $thisIndex . '_tracking';
-            $deliveryStatusInput = $thisIndex . '_delivery_status';
 
-            $orderNumber = $request->$orderNumberInput;
-            $createdAt = $request->$createdAtInput;
-            $totalCost = $request->$totalCostInput;
-            $carrier = $request->$carrierInput;
-            $tracking = $request->$trackingInput;
-            $deliveryStatus = $request->$deliveryStatusInput;
+        if($order_type != "") {
+            for($i = 0; $i < $totalOrder; $i++) {
+                $tmp = [];
+    
+                $thisIndex = $i;
+                $orderNumberInput = $thisIndex . '_order_number';
+                $createdAtInput = $thisIndex . '_created_at';
+                $totalCostInput = $thisIndex . '_total_cost';
+                $carrierInput = $thisIndex . '_carrier';
+                $trackingInput = $thisIndex . '_tracking';
+                $deliveryStatusInput = $thisIndex . '_delivery_status';
+    
+                $orderNumber = $request->$orderNumberInput;
+                $createdAt = $request->$createdAtInput;
+                $totalCost = $request->$totalCostInput;
+                $carrier = $request->$carrierInput;
+                $tracking = $request->$trackingInput;
+                $deliveryStatus = $request->$deliveryStatusInput;
 
-            $tmp['order_number'] = $orderNumber;
-            $tmp['created_at'] = $createdAt;
-            $tmp['total_cost'] = $totalCost;
-            $tmp['carrier'] = $carrier;
-            $tmp['tracking'] = $tracking;
-            $tmp['delivery_status'] = $deliveryStatus;
-            array_push($excelArray, $tmp);
+                if($download_type == "normal_tracking") {
+                    $tmp['order_number'] = $orderNumber;
+                    $tmp['created_at'] = $createdAt;
+                    $tmp['total_cost'] = $totalCost;
+
+                    if($carrier == "") {
+                        $tmp['carrier'] = "N/A";
+                    } else {
+                        $tmp['carrier'] = $carrier;
+                    }
+
+
+                    if($tracking == "") {
+                        $tmp['tracking'] = "N/A";
+                    } else {
+                        $tmp['tracking'] = $tracking;
+                    }
+
+                    if($deliveryStatus == "") {
+                        $tmp['delivery_status'] = "N/A";
+                    } else {
+                        $tmp['delivery_status'] = $deliveryStatus;
+                    }
+                } else if($download_type == "bigcom_add_tracking") {
+                    $tmp['order_number'] = $orderNumber;
+
+                    if($tracking == "") {
+                        $tmp['tracking_number'] = "N/A";
+                    } else {
+                        $tmp['tracking_number'] = $tracking;
+                    }
+
+                    if($carrier == "") {
+                        $tmp['carrier'] = "N/A";
+                    } else {
+                        $tmp['carrier'] = $carrier;
+                    }
+                }
+                
+                array_push($excelArray, $tmp);
+            }
+        } else {
+            for($i = 0; $i < $totalOrder; $i++) {
+                $tmp = [];
+    
+                $thisIndex = $i;
+                $orderNumberInput = $thisIndex . '_order_number';
+                $createdAtInput = $thisIndex . '_created_at';
+                $totalCostInput = $thisIndex . '_total_cost';
+                $carrierInput = $thisIndex . '_carrier';
+                $trackingInput = $thisIndex . '_tracking';
+                $deliveryStatusInput = $thisIndex . '_delivery_status';
+    
+                $orderNumber = $request->$orderNumberInput;
+                $createdAt = $request->$createdAtInput;
+                $totalCost = $request->$totalCostInput;
+                $carrier = $request->$carrierInput;
+                $tracking = $request->$trackingInput;
+                $deliveryStatus = $request->$deliveryStatusInput;
+    
+    
+                if($order_type != "") {
+                    $checkResult = strpos(strtolower($orderNumber), $order_type);
+                    if($checkResult === false) {
+                        continue;
+                    } else {
+                        $tmp['order_number'] = $orderNumber;
+                        $tmp['created_at'] = $createdAt;
+                        $tmp['total_cost'] = $totalCost;
+    
+                        if($carrier == "") {
+                            $tmp['carrier'] = "N/A";
+                        } else {
+                            $tmp['carrier'] = $carrier;
+                        }
+    
+    
+                        if($tracking == "") {
+                            $tmp['tracking'] = "N/A";
+                        } else {
+                            $tmp['tracking'] = $tracking;
+                        }
+    
+                        if($deliveryStatus == "") {
+                            $tmp['delivery_status'] = "N/A";
+                        } else {
+                            $tmp['delivery_status'] = $deliveryStatus;
+                        }
+                        
+                        array_push($excelArray, $tmp);
+                    }
+                }
+            }
         }
 
         // Sort and print the resulting array
         uasort($excelArray, array( $this, 'excelCmp' ));
         
         // dd($excelArray);
-        // dd($excelArray);
-        return Excel::download(new TrackingExport($excelArray), 'ds-tracking.xlsx');
+
+        if($download_type == "normal_tracking") {
+            return Excel::download(new TrackingExport($excelArray), 'ds-tracking.xlsx');
+        } else if($download_type == "bigcom_add_tracking") {
+            return Excel::download(new BigcomAddTrackingExport($excelArray), 'bigcom-add-tracking.csv');
+        }
     }
 
     // Comparison function
