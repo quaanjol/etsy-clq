@@ -26,12 +26,28 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('admins', 'App\Http\Controllers\AdminController');
     Route::resource('bigcomoriginals', 'App\Http\Controllers\BigcomOriginalController');
+    Route::resource('settings', 'App\Http\Controllers\Admin/SettingController');
+    Route::resource('carriers', 'App\Http\Controllers\Admin/CarrierController');
 
     // admin
     Route::get('/admin/dashboard', 'App\Http\Controllers\AdminController@show')->name('admin.dashboard');
     Route::get('/admin/theme/{color}', 'App\Http\Controllers\AdminController@changeTheme')->name('theme.change');
     Route::get('/admin/profile', 'App\Http\Controllers\AdminController@profile')->name('admin.profile');
     Route::post('/admin/profile', 'App\Http\Controllers\AdminController@storeProfileUpdate')->name('admin.profile.update');
+
+    // settings
+    Route::get('admin/setting/all', 'App\Http\Controllers\Admin\SettingController@show')->name('admin.setting.all');
+    Route::get('admin/setting/create', 'App\Http\Controllers\Admin\SettingController@create')->name('admin.setting.create');
+    Route::post('admin/setting/create', 'App\Http\Controllers\Admin\SettingController@store')->name('admin.setting.store');
+    Route::get('admin/setting/update/{id}', 'App\Http\Controllers\Admin\SettingController@update')->name('admin.setting.update');
+    Route::post('admin/setting/update/{id}', 'App\Http\Controllers\Admin\SettingController@storeUpdate')->name('admin.setting.storeUpdate');
+
+    // carriers
+    Route::get('admin/carrier/all', 'App\Http\Controllers\Admin\CarrierController@show')->name('admin.carrier.all');
+    Route::get('admin/carrier/create', 'App\Http\Controllers\Admin\CarrierController@create')->name('admin.carrier.create');
+    Route::post('admin/carrier/create', 'App\Http\Controllers\Admin\CarrierController@store')->name('admin.carrier.store');
+    Route::get('admin/carrier/update/{id}', 'App\Http\Controllers\Admin\CarrierController@update')->name('admin.carrier.update');
+    Route::post('admin/carrier/update/{id}', 'App\Http\Controllers\Admin\CarrierController@storeUpdate')->name('admin.carrier.storeUpdate');
 
     // bigcomoriginal
     Route::get('/admin/bigcomoriginal/convert/bs/management', 'App\Http\Controllers\BigcomOriginalController@show')->name('bigcomoriginal.bsm.convert');

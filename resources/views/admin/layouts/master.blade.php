@@ -57,6 +57,36 @@
             Quản lí thông tin
         </div>
 
+        <!-- Nav Item - Setting Menu -->
+        <li class="nav-item side-bar-item" id="settingLi">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSetting" aria-expanded="true" aria-controls="collapseSetting">
+            <i class="fas fa-fw fa-cogs"></i>
+                Setting
+            </a>
+            <div id="collapseSetting" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Thao tác:</h6>
+                    <a class="collapse-item" href="{{ route('admin.setting.all') }}">Hiển thị</a>
+                    <a class="collapse-item" href="{{ route('admin.setting.create') }}">Tạo mới</a>
+                </div>
+            </div>
+        </li>
+
+        <!-- Nav Item - Carrier Menu -->
+        <li class="nav-item side-bar-item" id="carrierLi">
+            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCarrier" aria-expanded="true" aria-controls="collapseCarrier">
+            <i class="fas fa-fw fa-truck"></i>
+                Carrier
+            </a>
+            <div id="collapseCarrier" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">Thao tác:</h6>
+                    <a class="collapse-item" href="{{ route('admin.carrier.all') }}">Hiển thị</a>
+                    <a class="collapse-item" href="{{ route('admin.carrier.create') }}">Tạo mới</a>
+                </div>
+            </div>
+        </li>
+
         <!-- Nav Item - Bigcommerce Menu -->
         <li class="nav-item side-bar-item" id="bigcommerceLi">
             <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCategory" aria-expanded="true" aria-controls="collapseCategory">
@@ -162,7 +192,7 @@
           </button>
 
             <!-- Topbar Search -->
-            <form action="" method="get" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+            <!-- <form action="" method="get" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
                 @csrf
                 <div class="input-group">
                 <input type="text" class="form-control bg-light border-0 small" 
@@ -175,7 +205,7 @@
                     </button>
                 </div>
                 </div>
-            </form>
+            </form> -->
 
           <!-- Topbar Navbar -->
           <ul class="navbar-nav ml-auto">
@@ -191,10 +221,10 @@
               </a>
               <!-- Dropdown - User Information -->
               <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item" href="{{ Route('admin.profile') }}">
+                <!-- <a class="dropdown-item" href="{{ Route('admin.profile') }}">
                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                     Trang cá nhân
-                </a>
+                </a> -->
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i> 

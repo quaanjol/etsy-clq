@@ -30,12 +30,12 @@ class CreateShopifyOriginalsTable extends Migration
             $table->string('discount_code');
             $table->string('discount_amount');
             $table->string('shipping_method');
-            $table->string('created_at');
+            $table->string('created_at_date');
             $table->string('lineitem_quantity');
-            $table->string('limeitem_name');
+            $table->text('limeitem_name');
             $table->string('lineitem_price');
             $table->string('lienitem_compare_at_price');
-            $table->string('lineitem_sku');
+            $table->text('lineitem_sku');
             $table->string('lineitem_requires_shipping');
             $table->string('lineitem_taxable');
             $table->string('lineitem_fulfillment_status');
@@ -83,9 +83,9 @@ class CreateShopifyOriginalsTable extends Migration
             $table->string('tax5_value');
             $table->string('phone');
             $table->string('receipt_number');
-            $table->string('duties');
-            $table->string('billing_province_name');
-            $table->string('shipping_province_name');
+            $table->text('duties');
+            $table->text('billing_province_name');
+            $table->text('shipping_province_name');
             $table->timestamps();
         });
     }
