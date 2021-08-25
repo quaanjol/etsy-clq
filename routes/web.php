@@ -26,8 +26,8 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::group(['middleware' => 'auth'], function () {
     Route::resource('admins', 'App\Http\Controllers\AdminController');
     Route::resource('bigcomoriginals', 'App\Http\Controllers\BigcomOriginalController');
-    Route::resource('settings', 'App\Http\Controllers\Admin/SettingController');
-    Route::resource('carriers', 'App\Http\Controllers\Admin/CarrierController');
+    Route::resource('settings', 'App\Http\Controllers\Admin\SettingController');
+    Route::resource('carriers', 'App\Http\Controllers\Admin\CarrierController');
 
     // admin
     Route::get('/admin/dashboard', 'App\Http\Controllers\AdminController@show')->name('admin.dashboard');
