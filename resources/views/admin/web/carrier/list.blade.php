@@ -36,6 +36,9 @@ All carriers
                             Name
                         </th>
                         <th scope="col">
+                            DS Name
+                        </th>
+                        <th scope="col">
                             Bigcommerce
                         </th>
                         <th scope="col">
