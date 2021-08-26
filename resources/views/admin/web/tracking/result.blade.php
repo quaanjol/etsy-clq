@@ -158,7 +158,7 @@ Dreamship Tracking Result
                             <td>
                                 ${{ $item->total_cost }}
                             </td>
-                            <td class="text-uppercase">
+                            <td class="">
                                 @if(count($item->fulfillments) == 0)
                                 Not available yet
                                 @else

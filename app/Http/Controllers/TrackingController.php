@@ -177,7 +177,7 @@ class TrackingController extends Controller
         $totalOrder = $request->total_order;
 
 
-        if($order_type != "") {
+        if($order_type == "") {
             for($i = 0; $i < $totalOrder; $i++) {
                 $tmp = [];
     
@@ -225,13 +225,19 @@ class TrackingController extends Controller
                     if($tracking == "") {
                         $tmp['tracking_number'] = "N/A";
                     } else {
-                        $tmp['tracking_number'] = $tracking;
+                        $tmp['tracking_number'] = strval($tracking);
                     }
 
                     if($carrier == "") {
-                        $tmp['carrier'] = "N/A";
+                        $tmp['tracking_carrier'] = "N/A";
                     } else {
-                        $tmp['carrier'] = $carrier;
+                        $thisCarrier = Carrier::where('ds_name', 'like', '%'. $carrier . '%')->first();
+
+                        if($thisCarrier == null) {
+                            $tmp['tracking_carrier'] = 'Verify tracking carrier again: ' . $carrier;
+                        } else {
+                            $tmp['tracking_carrier'] = $thisCarrier->bigcom_code;
+                        }
                     }
                 }
                 
@@ -257,11 +263,11 @@ class TrackingController extends Controller
                 $deliveryStatus = $request->$deliveryStatusInput;
     
     
-                if($order_type != "") {
-                    $checkResult = strpos(strtolower($orderNumber), $order_type);
-                    if($checkResult === false) {
-                        continue;
-                    } else {
+                $checkResult = strpos(strtolower($orderNumber), $order_type);
+                if($checkResult === false) {
+                    continue;
+                } else {
+                    if($download_type == "normal_tracking") {
                         $tmp['order_number'] = $orderNumber;
                         $tmp['created_at'] = $createdAt;
                         $tmp['total_cost'] = $totalCost;
@@ -284,10 +290,29 @@ class TrackingController extends Controller
                         } else {
                             $tmp['delivery_status'] = $deliveryStatus;
                         }
-                        
-                        array_push($excelArray, $tmp);
+                    } else if($download_type == "bigcom_add_tracking") {
+                        $tmp['order_number'] = $orderNumber;
+    
+                        if($tracking == "") {
+                            $tmp['tracking_number'] = "N/A";
+                        } else {
+                            $tmp['tracking_number'] = strval($tracking);
+                        }
+    
+                        if($carrier == "") {
+                            $tmp['tracking_carrier'] = "N/A";
+                        } else {
+                            $thisCarrier = Carrier::where('ds_name', 'like', '%'. $carrier . '%')->first();
+    
+                            if($thisCarrier == null) {
+                                $tmp['tracking_carrier'] = 'Verify tracking carrier again: ' . $carrier;
+                            } else {
+                                $tmp['tracking_carrier'] = $thisCarrier->bigcom_code;
+                            }
+                        }
                     }
                 }
+
             }
         }
 
