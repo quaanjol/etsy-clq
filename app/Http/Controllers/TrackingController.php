@@ -264,6 +264,7 @@ class TrackingController extends Controller
     
     
                 $checkResult = strpos(strtolower($orderNumber), $order_type);
+                // dd($order_type);
                 if($checkResult === false) {
                     continue;
                 } else {
@@ -313,6 +314,7 @@ class TrackingController extends Controller
                     }
                 }
 
+                array_push($excelArray, $tmp);
             }
         }
 
